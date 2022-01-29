@@ -1,6 +1,6 @@
-import {React} from 'react';
+import React, {useState} from 'react';
 
-const theme = {
+const Themes = {
   light: {
     background: '#fafafa',
     foreground: '#0a0a0a',
@@ -11,8 +11,34 @@ const theme = {
   },
 };
 
-const ThemeContext = React.createContext();
+export const ThemeContext = React.createContext();
 
-const ThemeProvider = ThemeContext.Provider;
+export const ThemeProvider = ThemeContext.Provider;
 
-const ThemeConsumer = ThemeContext.Consumer;
+export const ThemeConsumer = ThemeContext.Consumer;
+
+export const AppProvider = props => {
+  const {children} = props;
+  const [currentTheme, setCurrentTheme] = useState('light');
+  const [theme, setTheme] = useState(Themes.light);
+
+  const toggleTheme = () => {
+    if (currentTheme === 'light') {
+      setTheme(Themes.dark);
+      setCurrentTheme('dark');
+    } else {
+      setTheme(Themes.light);
+      setCurrentTheme('light');
+    }
+  };
+
+  return (
+    <ThemeProvider
+      value={{
+        theme: theme,
+        toggleTheme: toggleTheme,
+      }}>
+      {children}
+    </ThemeProvider>
+  );
+};
